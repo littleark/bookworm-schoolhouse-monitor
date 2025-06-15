@@ -9,7 +9,172 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      books: {
+        Row: {
+          author: string
+          cover: string | null
+          created_at: string | null
+          id: string
+          title: string
+          total_pages: number
+        }
+        Insert: {
+          author: string
+          cover?: string | null
+          created_at?: string | null
+          id?: string
+          title: string
+          total_pages: number
+        }
+        Update: {
+          author?: string
+          cover?: string | null
+          created_at?: string | null
+          id?: string
+          title?: string
+          total_pages?: number
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          created_at: string | null
+          date: string
+          id: string
+          notes: string | null
+          pages_read: number
+          student_book_id: string | null
+          time_spent: number
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          id?: string
+          notes?: string | null
+          pages_read: number
+          student_book_id?: string | null
+          time_spent: number
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          id?: string
+          notes?: string | null
+          pages_read?: number
+          student_book_id?: string | null
+          time_spent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_student_book_id_fkey"
+            columns: ["student_book_id"]
+            isOneToOne: false
+            referencedRelation: "student_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_books: {
+        Row: {
+          assigned_date: string | null
+          book_id: string | null
+          created_at: string | null
+          id: string
+          last_read_date: string | null
+          progress: number
+          status: string
+          student_id: string | null
+        }
+        Insert: {
+          assigned_date?: string | null
+          book_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_read_date?: string | null
+          progress?: number
+          status: string
+          student_id?: string | null
+        }
+        Update: {
+          assigned_date?: string | null
+          book_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_read_date?: string | null
+          progress?: number
+          status?: string
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_books_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_books_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          avatar: string | null
+          created_at: string | null
+          id: string
+          name: string
+          user_id: string | null
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          user_id?: string | null
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

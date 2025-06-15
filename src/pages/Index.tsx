@@ -1,10 +1,10 @@
+
 import { useState } from "react";
 import { StudentCard } from "@/components/StudentCard";
 import { StudentList } from "@/components/StudentList";
 import { StudentDetail } from "@/components/StudentDetail";
 import { BookDetail } from "@/components/BookDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Book,
@@ -13,27 +13,50 @@ import {
   GraduationCap,
   LayoutGrid,
   LayoutList,
+  Loader2,
 } from "lucide-react";
-import { mockStudents } from "@/data/mockData";
 import { Student, StudentBook } from "@/types/reading";
+import { useStudents } from "@/hooks/useStudents";
 
 export default function Index() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedBook, setSelectedBook] = useState<StudentBook | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const totalStudents = mockStudents.length;
-  const totalCompleted = mockStudents.reduce(
+  const { data: students = [], isLoading, error } = useStudents();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="ml-2 text-lg">Loading students...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-red-600 text-lg mb-4">Error loading students</p>
+          <p className="text-gray-600">Please check your connection and try again</p>
+        </div>
+      </div>
+    );
+  }
+
+  const totalStudents = students.length;
+  const totalCompleted = students.reduce(
     (sum, student) => sum + student.totalBooksCompleted,
     0,
   );
-  const activelyReading = mockStudents.filter((student) =>
+  const activelyReading = students.filter((student) =>
     student.books.some((book) => book.status === "reading"),
   ).length;
   const averageProgress =
     totalStudents > 0
       ? Math.round(
-          mockStudents.reduce(
+          students.reduce(
             (sum, student) => sum + student.averageProgress,
             0,
           ) / totalStudents,
@@ -41,7 +64,7 @@ export default function Index() {
       : 0;
 
   const generateDynamicSummary = () => {
-    if (totalStudents === 0) return "No students enrolled yet.";
+    if (totalStudents === 0) return "No students enrolled yet. Add some students to get started!";
 
     const completionRate = Math.round(
       (totalCompleted / (totalStudents * 5)) * 100,
@@ -183,7 +206,7 @@ export default function Index() {
       {/* Students Grid/List */}
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockStudents.map((student) => (
+          {students.map((student) => (
             <StudentCard
               key={student.id}
               student={student}
@@ -193,9 +216,17 @@ export default function Index() {
         </div>
       ) : (
         <StudentList
-          students={mockStudents}
+          students={students}
           onStudentClick={setSelectedStudent}
         />
+      )}
+
+      {students.length === 0 && (
+        <div className="text-center py-12">
+          <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No students yet</h3>
+          <p className="text-gray-500">Add some students to get started with your reading program.</p>
+        </div>
       )}
     </div>
   );
