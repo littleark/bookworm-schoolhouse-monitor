@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { StudentCard } from "@/components/StudentCard";
 import { StudentList } from "@/components/StudentList";
@@ -39,7 +38,9 @@ export default function Index() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <p className="text-red-600 text-lg mb-4">Error loading students</p>
-          <p className="text-gray-600">Please check your connection and try again</p>
+          <p className="text-gray-600">
+            Please check your connection and try again
+          </p>
         </div>
       </div>
     );
@@ -56,15 +57,14 @@ export default function Index() {
   const averageProgress =
     totalStudents > 0
       ? Math.round(
-          students.reduce(
-            (sum, student) => sum + student.averageProgress,
-            0,
-          ) / totalStudents,
+          students.reduce((sum, student) => sum + student.averageProgress, 0) /
+            totalStudents,
         )
       : 0;
 
   const generateDynamicSummary = () => {
-    if (totalStudents === 0) return "No students enrolled yet. Add some students to get started!";
+    if (totalStudents === 0)
+      return "No students enrolled yet. Add some students to get started!";
 
     const completionRate = Math.round(
       (totalCompleted / (totalStudents * 5)) * 100,
@@ -109,7 +109,7 @@ export default function Index() {
   return (
     <div className="space-y-6">
       {/* Dynamic Summary */}
-      <div className="text-left mb-8">
+      <div className="text-left mb-8 mt-8">
         <h2 className="text-2xl font-serif font-medium text-gray-800 leading-relaxed">
           {generateDynamicSummary()}
         </h2>
@@ -215,17 +215,18 @@ export default function Index() {
           ))}
         </div>
       ) : (
-        <StudentList
-          students={students}
-          onStudentClick={setSelectedStudent}
-        />
+        <StudentList students={students} onStudentClick={setSelectedStudent} />
       )}
 
       {students.length === 0 && (
         <div className="text-center py-12">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No students yet</h3>
-          <p className="text-gray-500">Add some students to get started with your reading program.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No students yet
+          </h3>
+          <p className="text-gray-500">
+            Add some students to get started with your reading program.
+          </p>
         </div>
       )}
     </div>
