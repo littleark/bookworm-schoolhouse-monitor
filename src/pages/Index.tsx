@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { StudentCard } from "@/components/StudentCard";
 import { StudentList } from "@/components/StudentList";
@@ -52,15 +53,15 @@ export default function Index() {
     );
 
     if (completionRate >= 80 && activeReadingRate >= 70) {
-      return `Outstanding! ${totalStudents} students are excelling with ${totalCompleted} books completed and ${activelyReading} actively reading. Keep up the amazing work! 📚`;
+      return `Class performance analysis: ${totalStudents} students have achieved an excellent completion rate with ${totalCompleted} books finished. ${activelyReading} students are currently engaged in active reading.`;
     } else if (completionRate >= 60 && activeReadingRate >= 50) {
-      return `Great progress! Your ${totalStudents} students have completed ${totalCompleted} books with ${activelyReading} currently reading. The momentum is building! 🌟`;
+      return `Class progress summary: ${totalStudents} students have completed ${totalCompleted} books total. Current engagement shows ${activelyReading} students actively reading, indicating positive momentum.`;
     } else if (activeReadingRate >= 60) {
-      return `Strong engagement! ${activelyReading} of ${totalStudents} students are actively reading. Let's help them reach the finish line! 💪`;
+      return `Reading engagement report: ${activelyReading} of ${totalStudents} students are currently reading. Focus on supporting completion rates to maximize learning outcomes.`;
     } else if (totalCompleted >= 20) {
-      return `Solid foundation! ${totalCompleted} books completed across ${totalStudents} students. Time to re-energize the reading habit! 🚀`;
+      return `Completion overview: ${totalCompleted} books have been finished across ${totalStudents} students. Consider strategies to increase active reading participation.`;
     } else {
-      return `Starting the journey! ${totalStudents} students are beginning their reading adventure. Every great reader started with a single page! ✨`;
+      return `Initial assessment: ${totalStudents} students are beginning their reading program. Establishing consistent reading habits will be the primary focus.`;
     }
   };
 
@@ -110,8 +111,8 @@ export default function Index() {
       <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Dynamic Summary */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 leading-relaxed">
+          <div className="text-left mb-8">
+            <h2 className="text-xl font-semibold text-gray-700 leading-relaxed">
               {generateDynamicSummary()}
             </h2>
           </div>
