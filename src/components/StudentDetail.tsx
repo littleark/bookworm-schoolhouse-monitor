@@ -282,7 +282,11 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
                       <span className="text-gray-600">Progress</span>
                       <span className="font-medium text-gray-900">{studentBook.progress}%</span>
                     </div>
-                    <Progress value={studentBook.progress} className="h-2 bg-gray-200" />
+                    <Progress 
+                      value={studentBook.progress} 
+                      className={`h-2 ${studentBook.status === 'reading' ? '[&>div]:bg-purple-500' : ''}`}
+                      style={{ backgroundColor: 'white' }}
+                    />
                   </div>
                   
                   <div className="flex gap-4 text-xs text-gray-500">
