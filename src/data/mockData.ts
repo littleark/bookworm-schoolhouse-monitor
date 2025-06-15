@@ -1,26 +1,25 @@
-
 import { Student, Book } from '@/types/reading';
 
 export const mockBooks: Book[] = [
   {
     id: '1',
-    title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
-    cover: '/placeholder.svg',
+    title: 'The Iron Man',
+    author: 'Ted Hughes',
+    cover: '/lovable-uploads/6c457240-a5df-4c45-8471-55374b118a17.png',
     totalPages: 376
   },
   {
     id: '2',
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    cover: '/placeholder.svg',
+    title: "Kensuke's Kingdom",
+    author: 'Michael Morpurgo',
+    cover: '/lovable-uploads/dcce4bda-0507-4e8b-b17b-accff80e7d95.png',
     totalPages: 180
   },
   {
     id: '3',
-    title: '1984',
-    author: 'George Orwell',
-    cover: '/placeholder.svg',
+    title: 'The Jungle Book',
+    author: 'Rudyard Kipling',
+    cover: '/lovable-uploads/e1bbf80a-7477-4896-8c42-b06f7e2f5501.png',
     totalPages: 328
   }
 ];
