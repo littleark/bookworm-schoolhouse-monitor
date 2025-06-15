@@ -61,7 +61,7 @@ export function BookDetail({ studentBook, studentName, onBack }: BookDetailProps
                 </div>
                 <Progress 
                   value={studentBook.progress} 
-                  className="h-3" 
+                  className="h-3 [&>div]:bg-purple-500" 
                   style={{ backgroundColor: 'white' }}
                 />
               </div>
