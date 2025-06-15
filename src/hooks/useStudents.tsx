@@ -3,15 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Student, StudentBook, ReadingSession } from "@/types/reading";
 
+// Hardcoded user ID for now
+const HARDCODED_USER_ID = "11dab289-5ba7-4605-ae10-3ffff1bb770c";
+
 export const useStudents = () => {
   return useQuery({
-    queryKey: ['students'],
+    queryKey: ['students', HARDCODED_USER_ID],
     queryFn: async (): Promise<Student[]> => {
-      // For now, we'll fetch all students. In a real app with auth, 
-      // you'd filter by the current user's ID
+      // Fetch students for the specific user
       const { data: studentsData, error: studentsError } = await supabase
         .from('students')
-        .select('*');
+        .select('*')
+        .eq('user_id', HARDCODED_USER_ID);
       
       if (studentsError) {
         console.error('Error fetching students:', studentsError);
@@ -97,6 +100,27 @@ export const useStudents = () => {
       );
 
       return studentsWithBooks;
+    },
+  });
+};
+
+// Hook to get teacher info
+export const useTeacher = () => {
+  return useQuery({
+    queryKey: ['teacher', HARDCODED_USER_ID],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('users')
+        .select('name, email')
+        .eq('id', HARDCODED_USER_ID)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching teacher:', error);
+        throw error;
+      }
+
+      return data;
     },
   });
 };
