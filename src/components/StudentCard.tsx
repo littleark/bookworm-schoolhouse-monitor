@@ -1,3 +1,4 @@
+
 import { Student } from '@/types/reading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -19,6 +20,18 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   const currentlyReading = student.books
     .filter(book => book.status === 'reading')
     .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
+
+  // Get the most recent read date from any book
+  const getLastReadDate = () => {
+    const allDates = student.books
+      .map(book => book.lastReadDate)
+      .filter(date => date !== null && date !== undefined)
+      .sort((a, b) => (b?.getTime() || 0) - (a?.getTime() || 0));
+    
+    return allDates.length > 0 ? allDates[0] : null;
+  };
+
+  const lastReadDate = getLastReadDate();
 
   // Generate a consistent color for each student based on their name
   const getStudentColor = (name: string) => {
@@ -53,6 +66,17 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         ? date.toLocaleDateString('en-US', { weekday: 'short' })
         : date.getDate().toString();
       
+      // If no current book, don't show any progress bars
+      if (!currentlyReading) {
+        dataPoints.push({
+          day: dayName,
+          pages: 0,
+          date: date.toISOString().split('T')[0],
+          isCurrentBook: false
+        });
+        continue;
+      }
+      
       // Simulate reading progress for each day (in a real app, this would come from sessions)
       const progress = Math.random() * 20; // 0-20 pages read per day
       
@@ -85,7 +109,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-md transition-all duration-200 bg-white shadow-sm h-fit"
+      className="cursor-pointer hover:shadow-md transition-all duration-200 bg-white h-fit"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -129,8 +153,17 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
               )}
             </div>
           ) : (
-            <div className="text-sm text-gray-500 text-center py-4">
-              No books currently being read
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-500">No books currently being read</span>
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full mb-2"></div>
+              {lastReadDate && (
+                <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
+                  <Calendar className="w-3 h-3" />
+                  <span>Last read: {lastReadDate.toLocaleDateString()} at {lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
