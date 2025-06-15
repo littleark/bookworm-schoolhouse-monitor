@@ -55,33 +55,33 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   const chartConfig = {
     pages: {
       label: "Pages Read",
-      color: "#6366f1", // Indigo for old books
+      color: "#9ca3af", // Gray for old books
     },
     currentPages: {
       label: "Current Book Pages",
-      color: "#10b981", // Emerald for current book
+      color: "#374151", // Dark gray for current book
     },
   };
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-br from-white to-blue-50 h-fit"
+      className="cursor-pointer hover:shadow-md transition-all duration-200 bg-white shadow-sm h-fit"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-lg">
             {student.name.split(' ').map(n => n[0]).join('')}
           </div>
           <div className="flex-1">
-            <CardTitle className="text-lg">{student.name}</CardTitle>
-            <p className="text-sm text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-lg text-gray-900">{student.name}</CardTitle>
+            <p className="text-sm text-gray-600 flex items-center gap-1">
               <User className="w-3 h-3" />
               {student.books.length} books assigned
             </p>
           </div>
           {currentlyReading && (
-            <div className="w-16 h-20 rounded-md overflow-hidden shadow-sm">
+            <div className="w-16 h-20 rounded-md overflow-hidden">
               <img 
                 src={currentlyReading.book.cover} 
                 alt={currentlyReading.book.title}
@@ -97,19 +97,19 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
           {currentlyReading ? (
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="font-medium truncate">{currentlyReading.book.title}</span>
-                <span className="font-medium">{currentlyReading.progress}%</span>
+                <span className="font-medium truncate text-gray-900">{currentlyReading.book.title}</span>
+                <span className="font-medium text-gray-900">{currentlyReading.progress}%</span>
               </div>
-              <Progress value={currentlyReading.progress} className="h-2" />
+              <Progress value={currentlyReading.progress} className="h-2 bg-gray-200" />
               {currentlyReading.lastReadDate && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
+                <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
                   <Calendar className="w-3 h-3" />
                   <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()} at {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               )}
             </div>
           ) : (
-            <div className="text-sm text-muted-foreground text-center py-4">
+            <div className="text-sm text-gray-500 text-center py-4">
               No books currently being read
             </div>
           )}
@@ -118,7 +118,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         {/* Daily Reading Progress Chart */}
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
-            <p className="text-sm font-medium">Reading Activity</p>
+            <p className="text-sm font-medium text-gray-900">Reading Activity</p>
             <div className="flex gap-1">
               <button
                 onClick={(e) => {
@@ -127,7 +127,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                 }}
                 className={`text-xs px-2 py-1 rounded ${
                   chartDays === 7 
-                    ? 'bg-black text-white' 
+                    ? 'bg-gray-900 text-white' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -140,7 +140,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                 }}
                 className={`text-xs px-2 py-1 rounded ${
                   chartDays === 30 
-                    ? 'bg-black text-white' 
+                    ? 'bg-gray-900 text-white' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -170,7 +170,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                     {dailyData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
-                        fill={entry.isCurrentBook ? "#10b981" : "#6366f1"} 
+                        fill={entry.isCurrentBook ? "#374151" : "#9ca3af"} 
                       />
                     ))}
                   </Bar>
@@ -182,10 +182,10 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-1">
-            <Book className="w-4 h-4 text-green-600" />
-            <span>{student.totalBooksCompleted} completed</span>
+            <Book className="w-4 h-4 text-gray-600" />
+            <span className="text-gray-900">{student.totalBooksCompleted} completed</span>
           </div>
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-700">
             {activeBooks} reading
           </Badge>
         </div>

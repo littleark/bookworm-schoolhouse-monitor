@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { mockStudents } from '@/data/mockData';
 import { Student, StudentBook } from '@/types/reading';
@@ -94,76 +95,76 @@ const Index = () => {
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold text-gray-900">
                   Reading Progress Dashboard
                 </h1>
-                <p className="text-muted-foreground">Track your students' reading journey</p>
+                <p className="text-gray-600">Track your students' reading journey</p>
               </div>
             </div>
 
             {/* Class Summary */}
-            <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+            <Card className="bg-white shadow-sm">
               <CardContent className="p-6">
-                <p className="text-lg font-bold text-indigo-900 leading-relaxed">
+                <p className="text-lg font-bold text-gray-900 leading-relaxed">
                   {generateClassSummary()}
                 </p>
               </CardContent>
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
+              <Card className="bg-white shadow-sm">
                 <CardContent className="p-4 text-center">
-                  <User className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                  <p className="text-2xl font-bold text-blue-700">{totalStudents}</p>
-                  <p className="text-sm text-blue-600">Students</p>
+                  <User className="w-8 h-8 mx-auto mb-2 text-gray-600" />
+                  <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
+                  <p className="text-sm text-gray-600">Students</p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-green-50 to-green-100">
+              <Card className="bg-white shadow-sm">
                 <CardContent className="p-4 text-center">
-                  <BookOpen className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                  <p className="text-2xl font-bold text-green-700">{completedBooks}</p>
-                  <p className="text-sm text-green-600">Completed</p>
+                  <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-600" />
+                  <p className="text-2xl font-bold text-gray-900">{completedBooks}</p>
+                  <p className="text-sm text-gray-600">Completed</p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
+              <Card className="bg-white shadow-sm">
                 <CardContent className="p-4 text-center">
-                  <Book className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                  <p className="text-2xl font-bold text-purple-700">{totalBooks}</p>
-                  <p className="text-sm text-purple-600">Total Books</p>
+                  <Book className="w-8 h-8 mx-auto mb-2 text-gray-600" />
+                  <p className="text-2xl font-bold text-gray-900">{totalBooks}</p>
+                  <p className="text-sm text-gray-600">Total Books</p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-orange-50 to-orange-100">
+              <Card className="bg-white shadow-sm">
                 <CardContent className="p-4 text-center">
-                  <Search className="w-8 h-8 mx-auto mb-2 text-orange-600" />
-                  <p className="text-2xl font-bold text-orange-700">{averageProgress}%</p>
-                  <p className="text-sm text-orange-600">Avg Progress</p>
+                  <Search className="w-8 h-8 mx-auto mb-2 text-gray-600" />
+                  <p className="text-2xl font-bold text-gray-900">{averageProgress}%</p>
+                  <p className="text-sm text-gray-600">Avg Progress</p>
                 </CardContent>
               </Card>
             </div>
 
             <div>
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
+                <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900">
                   <User className="w-5 h-5" />
                   Students ({filteredStudents.length})
                 </h2>
                 
                 <div className="flex items-center gap-4">
                   <div className="relative w-full md:w-72">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       placeholder="Search students..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 border-gray-200 bg-white"
                     />
                   </div>
                   
                   <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'list')}>
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-2 bg-gray-100">
                       <TabsTrigger value="grid" className="flex items-center gap-2">
                         <Grid className="w-4 h-4" />
                         Grid
@@ -200,26 +201,26 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Top Navigation Bar */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-gray-900">
                   bookworm
                 </h1>
-                <p className="text-xs text-muted-foreground">Reading Progress Tracker</p>
+                <p className="text-xs text-gray-600">Reading Progress Tracker</p>
               </div>
             </div>
             
             {/* Navigation options placeholder */}
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">Teacher Dashboard</span>
+              <span className="text-sm text-gray-600">Teacher Dashboard</span>
             </div>
           </div>
         </div>
