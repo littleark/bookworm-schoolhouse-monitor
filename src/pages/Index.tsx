@@ -1,227 +1,166 @@
-import React, { useState } from 'react';
-import { mockStudents } from '@/data/mockData';
-import { Student, StudentBook } from '@/types/reading';
+import { useState } from 'react';
 import { StudentCard } from '@/components/StudentCard';
 import { StudentList } from '@/components/StudentList';
 import { StudentDetail } from '@/components/StudentDetail';
 import { BookDetail } from '@/components/BookDetail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Book, User, Search, BookOpen, GraduationCap, Grid, List } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Book, Users, BarChart3, GraduationCap, LayoutGrid, LayoutList } from 'lucide-react';
+import { mockStudents } from '@/data/mockData';
+import { Student, StudentBook } from '@/types/reading';
 
-type View = 'students' | 'student-detail' | 'book-detail';
-
-const Index = () => {
-  const [currentView, setCurrentView] = useState<View>('students');
+export default function Index() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedBook, setSelectedBook] = useState<StudentBook | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const filteredStudents = mockStudents.filter(student =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const totalStudents = mockStudents.length;
-  const totalBooks = mockStudents.reduce((sum, student) => sum + student.books.length, 0);
-  const completedBooks = mockStudents.reduce((sum, student) => sum + student.totalBooksCompleted, 0);
-  const averageProgress = Math.round(
-    mockStudents.reduce((sum, student) => sum + student.averageProgress, 0) / totalStudents
-  );
+  const totalCompleted = mockStudents.reduce((sum, student) => sum + student.totalBooksCompleted, 0);
+  const activelyReading = mockStudents.filter(student => student.books.some(book => book.status === 'reading')).length;
+  const averageProgress = totalStudents > 0 ? Math.round(mockStudents.reduce((sum, student) => sum + student.averageProgress, 0) / totalStudents) : 0;
 
-  // Generate class summary sentence
-  const generateClassSummary = () => {
-    const activeReaders = mockStudents.filter(student => 
-      student.books.some(book => book.status === 'reading')
-    ).length;
-    const completionRate = Math.round((completedBooks / totalBooks) * 100);
+  const generateDynamicSummary = () => {
+    if (totalStudents === 0) return "No students enrolled yet.";
     
-    if (averageProgress >= 80) {
-      return `Your class is excelling with ${averageProgress}% average progress! ${activeReaders} students are actively reading and maintaining excellent momentum.`;
-    } else if (averageProgress >= 60) {
-      return `Your class is making solid progress with ${averageProgress}% completion rate. ${activeReaders} students are currently engaged in reading activities.`;
-    } else if (averageProgress >= 40) {
-      return `Your class is building reading habits with ${averageProgress}% average progress. ${activeReaders} students are actively working through their books.`;
+    const completionRate = Math.round((totalCompleted / (totalStudents * 5)) * 100); // Assuming 5 books per student target
+    const activeReadingRate = Math.round((activelyReading / totalStudents) * 100);
+    
+    if (completionRate >= 80 && activeReadingRate >= 70) {
+      return `Outstanding! ${totalStudents} students are excelling with ${totalCompleted} books completed and ${activelyReading} actively reading. Keep up the amazing work! 📚`;
+    } else if (completionRate >= 60 && activeReadingRate >= 50) {
+      return `Great progress! Your ${totalStudents} students have completed ${totalCompleted} books with ${activelyReading} currently reading. The momentum is building! 🌟`;
+    } else if (activeReadingRate >= 60) {
+      return `Strong engagement! ${activelyReading} of ${totalStudents} students are actively reading. Let's help them reach the finish line! 💪`;
+    } else if (totalCompleted >= 20) {
+      return `Solid foundation! ${totalCompleted} books completed across ${totalStudents} students. Time to re-energize the reading habit! 🚀`;
     } else {
-      return `Your class is in the early stages of their reading journey with ${activeReaders} students currently reading. Great potential for growth ahead!`;
+      return `Starting the journey! ${totalStudents} students are beginning their reading adventure. Every great reader started with a single page! ✨`;
     }
   };
 
-  const handleStudentClick = (student: Student) => {
-    setSelectedStudent(student);
-    setCurrentView('student-detail');
-  };
+  if (selectedBook) {
+    return <BookDetail book={selectedBook} onBack={() => setSelectedBook(null)} />;
+  }
 
-  const handleBookClick = (book: StudentBook) => {
-    setSelectedBook(book);
-    setCurrentView('book-detail');
-  };
-
-  const handleBackToStudents = () => {
-    setCurrentView('students');
-    setSelectedStudent(null);
-    setSelectedBook(null);
-  };
-
-  const handleBackToStudent = () => {
-    setCurrentView('student-detail');
-    setSelectedBook(null);
-  };
-
-  const renderContent = () => {
-    switch (currentView) {
-      case 'student-detail':
-        return selectedStudent ? (
-          <StudentDetail
-            student={selectedStudent}
-            onBack={handleBackToStudents}
-            onBookClick={handleBookClick}
-          />
-        ) : null;
-        
-      case 'book-detail':
-        return selectedBook && selectedStudent ? (
-          <BookDetail
-            studentBook={selectedBook}
-            studentName={selectedStudent.name}
-            onBack={handleBackToStudent}
-          />
-        ) : null;
-        
-      default:
-        return (
-          <div className="space-y-6">
-            {/* Class Summary - larger and more prominent */}
-            <div className="mb-8">
-              <p className="text-2xl font-bold text-gray-900 leading-relaxed">
-                {generateClassSummary()}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-white shadow-sm">
-                <CardContent className="p-4 text-center">
-                  <User className="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                  <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
-                  <p className="text-sm text-gray-600">Students</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white shadow-sm">
-                <CardContent className="p-4 text-center">
-                  <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                  <p className="text-2xl font-bold text-gray-900">{completedBooks}</p>
-                  <p className="text-sm text-gray-600">Completed</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white shadow-sm">
-                <CardContent className="p-4 text-center">
-                  <Book className="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                  <p className="text-2xl font-bold text-gray-900">{totalBooks}</p>
-                  <p className="text-sm text-gray-600">Total Books</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white shadow-sm">
-                <CardContent className="p-4 text-center">
-                  <Search className="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                  <p className="text-2xl font-bold text-gray-900">{averageProgress}%</p>
-                  <p className="text-sm text-gray-600">Avg Progress</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900">
-                  <User className="w-5 h-5" />
-                  Students ({filteredStudents.length})
-                </h2>
-                
-                <div className="flex items-center gap-4">
-                  <div className="relative w-full md:w-72">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      placeholder="Search students..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 border-gray-200 bg-white"
-                    />
-                  </div>
-                  
-                  <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'list')}>
-                    <TabsList className="grid w-full grid-cols-2 bg-gray-100">
-                      <TabsTrigger value="grid" className="flex items-center gap-2">
-                        <Grid className="w-4 h-4" />
-                        Grid
-                      </TabsTrigger>
-                      <TabsTrigger value="list" className="flex items-center gap-2">
-                        <List className="w-4 h-4" />
-                        List
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-              </div>
-              
-              {viewMode === 'grid' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredStudents.map((student) => (
-                    <StudentCard
-                      key={student.id}
-                      student={student}
-                      onClick={() => handleStudentClick(student)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <StudentList
-                  students={filteredStudents}
-                  onStudentClick={handleStudentClick}
-                />
-              )}
-            </div>
-          </div>
-        );
-    }
-  };
+  if (selectedStudent) {
+    return (
+      <StudentDetail
+        student={selectedStudent}
+        onBack={() => setSelectedStudent(null)}
+        onBookClick={setSelectedBook}
+      />
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation Bar */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  bookworm
-                </h1>
-                <p className="text-xs text-gray-600">Reading Progress Tracker</p>
-              </div>
-            </div>
-            
-            {/* Navigation options placeholder */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">Teacher Dashboard</span>
-            </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Dynamic Summary Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 leading-relaxed">
+            {generateDynamicSummary()}
+          </h1>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-900">Total Students</CardTitle>
+              <Users className="h-4 w-4 text-gray-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{totalStudents}</div>
+              <p className="text-xs text-gray-500">
+                enrolled students
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-900">Books Completed</CardTitle>
+              <Book className="h-4 w-4 text-gray-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{totalCompleted}</div>
+              <p className="text-xs text-gray-500">
+                across all students
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-900">Currently Reading</CardTitle>
+              <GraduationCap className="h-4 w-4 text-gray-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{activelyReading}</div>
+              <p className="text-xs text-gray-500">
+                students reading now
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-900">Average Progress</CardTitle>
+              <BarChart3 className="h-4 w-4 text-gray-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{averageProgress}%</div>
+              <p className="text-xs text-gray-500">
+                completion rate
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* View Toggle */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-900">Students</h2>
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className="text-xs"
+            >
+              <LayoutGrid className="w-4 h-4 mr-1" />
+              Cards
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="text-xs"
+            >
+              <LayoutList className="w-4 h-4 mr-1" />
+              List
+            </Button>
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <div className="p-6">
-        <div className="max-w-7xl mx-auto">
-          {renderContent()}
-        </div>
+        {/* Students Grid/List */}
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockStudents.map((student) => (
+              <StudentCard
+                key={student.id}
+                student={student}
+                onClick={() => setSelectedStudent(student)}
+              />
+            ))}
+          </div>
+        ) : (
+          <StudentList
+            students={mockStudents}
+            onStudentClick={setSelectedStudent}
+          />
+        )}
       </div>
     </div>
   );
-};
-
-export default Index;
+}

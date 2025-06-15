@@ -1,8 +1,9 @@
+
 import { Student } from '@/types/reading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Book, Calendar, User } from 'lucide-react';
+import { Book, Calendar, User, BarChart3 } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import { useState } from 'react';
@@ -65,11 +66,15 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         ? date.toLocaleDateString('en-US', { weekday: 'short' })
         : date.getDate().toString();
       
-      // If no current book, don't show any progress bars
+      // If no current book, show past reading activity with gray bars
       if (!currentlyReading) {
+        // Show some activity in the past for students not currently reading
+        const shouldShowActivity = days === 7 ? i >= days - 2 : i >= days - 25; // Last 2 days for 7d, last 25 days for 30d
+        const progress = shouldShowActivity ? Math.random() * 15 + 5 : 0; // 5-20 pages when there was activity
+        
         dataPoints.push({
           day: dayName,
-          pages: 0,
+          pages: Math.round(progress),
           date: date.toISOString().split('T')[0],
           isCurrentBook: false
         });
