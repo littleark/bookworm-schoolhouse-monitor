@@ -4,7 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Book, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, Book, Calendar, Clock, BarChart3 } from 'lucide-react';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import { useState } from 'react';
 
 interface StudentDetailProps {
   student: Student;
@@ -13,6 +16,8 @@ interface StudentDetailProps {
 }
 
 export function StudentDetail({ student, onBack, onBookClick }: StudentDetailProps) {
+  const [chartDays, setChartDays] = useState<7 | 30>(30);
+
   const getStatusBadge = (status: string) => {
     const variants = {
       'completed': 'bg-green-100 text-green-700 border-green-200',
@@ -26,6 +31,48 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
         {status.replace('-', ' ')}
       </Badge>
     );
+  };
+
+  // Generate daily reading progress data
+  const generateDailyData = (days: number) => {
+    const dataPoints = [];
+    const today = new Date();
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dayName = days === 7 
+        ? date.toLocaleDateString('en-US', { weekday: 'short' })
+        : date.getDate().toString();
+      
+      // Simulate reading progress for each day
+      const progress = Math.random() * 25; // 0-25 pages read per day
+      
+      // Determine if this is for current book (last 30% of days) or old books
+      const isCurrentBook = i < Math.ceil(days * 0.3);
+      
+      dataPoints.push({
+        day: dayName,
+        pages: Math.round(progress),
+        date: date.toISOString().split('T')[0],
+        isCurrentBook
+      });
+    }
+    
+    return dataPoints;
+  };
+
+  const dailyData = generateDailyData(chartDays);
+
+  const chartConfig = {
+    pages: {
+      label: "Pages Read",
+      color: "#6366f1", // Indigo for old books
+    },
+    currentPages: {
+      label: "Current Book Pages",
+      color: "#10b981", // Emerald for current book
+    },
   };
 
   return (
@@ -67,6 +114,87 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
                 {student.books.filter(b => b.status === 'reading').length}
               </p>
               <p className="text-sm text-muted-foreground">Currently Reading</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Reading Activity Chart */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Reading Activity
+            </CardTitle>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setChartDays(7)}
+                className={`text-xs px-3 py-1 rounded ${
+                  chartDays === 7 
+                    ? 'bg-black text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                7 days
+              </button>
+              <button
+                onClick={() => setChartDays(30)}
+                className={`text-xs px-3 py-1 rounded ${
+                  chartDays === 30 
+                    ? 'bg-black text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                30 days
+              </button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[200px] w-full">
+            <ChartContainer config={chartConfig} className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dailyData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                    label={{ value: 'Pages', angle: -90, position: 'insideLeft' }}
+                  />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                  />
+                  <Bar 
+                    dataKey="pages" 
+                    radius={[2, 2, 0, 0]}
+                  >
+                    {dailyData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.isCurrentBook ? "#10b981" : "#6366f1"} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </div>
+          <div className="flex justify-center gap-6 mt-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-indigo-500 rounded"></div>
+              <span>Previous books</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-emerald-500 rounded"></div>
+              <span>Current book</span>
             </div>
           </div>
         </CardContent>

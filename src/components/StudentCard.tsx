@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Book, Calendar, User } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 import { useState } from 'react';
 
 interface StudentCardProps {
@@ -36,10 +36,14 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
       // Simulate reading progress for each day (in a real app, this would come from sessions)
       const progress = Math.random() * 20; // 0-20 pages read per day
       
+      // Determine if this is for current book (last 30% of days) or old books
+      const isCurrentBook = i < Math.ceil(days * 0.3);
+      
       dataPoints.push({
         day: dayName,
         pages: Math.round(progress),
-        date: date.toISOString().split('T')[0]
+        date: date.toISOString().split('T')[0],
+        isCurrentBook
       });
     }
     
@@ -51,7 +55,11 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   const chartConfig = {
     pages: {
       label: "Pages Read",
-      color: "#000000",
+      color: "#6366f1", // Indigo for old books
+    },
+    currentPages: {
+      label: "Current Book Pages",
+      color: "#10b981", // Emerald for current book
     },
   };
 
@@ -85,25 +93,27 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {currentlyReading ? (
-          <div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="font-medium truncate">{currentlyReading.book.title}</span>
-              <span className="font-medium">{currentlyReading.progress}%</span>
-            </div>
-            <Progress value={currentlyReading.progress} className="h-2" />
-            {currentlyReading.lastReadDate && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
-                <Calendar className="w-3 h-3" />
-                <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()} at {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <div className="min-h-[80px]">
+          {currentlyReading ? (
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium truncate">{currentlyReading.book.title}</span>
+                <span className="font-medium">{currentlyReading.progress}%</span>
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="text-sm text-muted-foreground text-center py-4">
-            No books currently being read
-          </div>
-        )}
+              <Progress value={currentlyReading.progress} className="h-2" />
+              {currentlyReading.lastReadDate && (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
+                  <Calendar className="w-3 h-3" />
+                  <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()} at {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground text-center py-4">
+              No books currently being read
+            </div>
+          )}
+        </div>
 
         {/* Daily Reading Progress Chart */}
         <div className="mt-4">
@@ -155,9 +165,15 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                   />
                   <Bar 
                     dataKey="pages" 
-                    fill="#000000"
                     radius={[1, 1, 0, 0]}
-                  />
+                  >
+                    {dailyData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.isCurrentBook ? "#10b981" : "#6366f1"} 
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
