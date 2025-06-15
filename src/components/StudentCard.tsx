@@ -1,5 +1,3 @@
-
-
 import { Student } from '@/types/reading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -110,7 +108,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-md transition-all duration-200 bg-white h-fit"
+      className="cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white h-fit transform"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -252,4 +250,3 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
     </Card>
   );
 }
-

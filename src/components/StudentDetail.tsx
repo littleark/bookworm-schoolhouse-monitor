@@ -257,7 +257,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
         {student.books.map((studentBook) => (
           <Card 
             key={studentBook.id}
-            className="cursor-pointer hover:shadow-md transition-all duration-200 bg-white shadow-sm"
+            className="cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-white shadow-sm transform"
             onClick={() => onBookClick(studentBook)}
           >
             <CardContent className="p-4">
@@ -284,8 +284,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
                     </div>
                     <Progress 
                       value={studentBook.progress} 
-                      className={`h-2 ${studentBook.status === 'reading' ? '[&>div]:bg-purple-500' : ''}`}
-                      style={{ backgroundColor: '#f3f4f6' }}
+                      className={`h-2 ${studentBook.status === 'reading' ? '[&>div]:bg-purple-500' : ''} bg-gray-200`}
                     />
                   </div>
                   

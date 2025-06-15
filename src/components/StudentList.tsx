@@ -1,4 +1,3 @@
-
 import { Student } from '@/types/reading';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +54,7 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
             return (
               <TableRow 
                 key={student.id} 
-                className="cursor-pointer hover:bg-gray-50"
+                className="cursor-pointer hover:bg-gray-50 hover:shadow-md transition-all duration-200"
                 onClick={() => onStudentClick(student)}
               >
                 <TableCell>
