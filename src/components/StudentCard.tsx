@@ -56,7 +56,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
             {currentlyReading.lastReadDate && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
                 <Calendar className="w-3 h-3" />
-                <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()}</span>
+                <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()} at {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
             )}
           </div>

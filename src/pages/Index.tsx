@@ -1,13 +1,14 @@
-
 import React, { useState } from 'react';
 import { mockStudents } from '@/data/mockData';
 import { Student, StudentBook } from '@/types/reading';
 import { StudentCard } from '@/components/StudentCard';
+import { StudentList } from '@/components/StudentList';
 import { StudentDetail } from '@/components/StudentDetail';
 import { BookDetail } from '@/components/BookDetail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Book, User, Search, BookOpen, GraduationCap } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Book, User, Search, BookOpen, GraduationCap, Grid, List } from 'lucide-react';
 
 type View = 'students' | 'student-detail' | 'book-detail';
 
@@ -16,6 +17,7 @@ const Index = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedBook, setSelectedBook] = useState<StudentBook | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const filteredStudents = mockStudents.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -80,14 +82,29 @@ const Index = () => {
                 <p className="text-muted-foreground">Track your students' reading journey</p>
               </div>
               
-              <div className="relative w-full md:w-72">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  placeholder="Search students..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-full md:w-72">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input
+                    placeholder="Search students..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                
+                <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'list')}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="grid" className="flex items-center gap-2">
+                      <Grid className="w-4 h-4" />
+                      Grid
+                    </TabsTrigger>
+                    <TabsTrigger value="list" className="flex items-center gap-2">
+                      <List className="w-4 h-4" />
+                      List
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
             </div>
 
@@ -131,15 +148,22 @@ const Index = () => {
                 Students ({filteredStudents.length})
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredStudents.map((student) => (
-                  <StudentCard
-                    key={student.id}
-                    student={student}
-                    onClick={() => handleStudentClick(student)}
-                  />
-                ))}
-              </div>
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredStudents.map((student) => (
+                    <StudentCard
+                      key={student.id}
+                      student={student}
+                      onClick={() => handleStudentClick(student)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <StudentList
+                  students={filteredStudents}
+                  onStudentClick={handleStudentClick}
+                />
+              )}
             </div>
           </div>
         );
