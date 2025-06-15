@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { StudentCard } from '@/components/StudentCard';
 import { StudentList } from '@/components/StudentList';
@@ -40,7 +41,7 @@ export default function Index() {
   };
 
   if (selectedBook) {
-    return <BookDetail book={selectedBook.book} onBack={() => setSelectedBook(null)} />;
+    return <BookDetail book={selectedBook} onBack={() => setSelectedBook(null)} />;
   }
 
   if (selectedStudent) {
@@ -76,12 +77,6 @@ export default function Index() {
 
       <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          {/* Reading Progress Dashboard Header */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Reading Progress Dashboard</h1>
-            <p className="text-gray-600">Track your students' reading journey and progress</p>
-          </div>
-
           {/* Dynamic Summary */}
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-900 leading-relaxed">
