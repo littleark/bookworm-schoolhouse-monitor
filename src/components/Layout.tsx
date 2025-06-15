@@ -9,8 +9,8 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Header Bar */}
-      <div className="bg-white border-b shadow-sm">
+      {/* Fixed Top Header Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -30,8 +30,8 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
       </div>
 
-      {/* Main Content with consistent padding */}
-      <div className="p-6">
+      {/* Main Content with top padding to account for fixed header */}
+      <div className="pt-20 p-6">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
