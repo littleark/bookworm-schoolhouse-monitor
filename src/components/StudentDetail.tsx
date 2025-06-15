@@ -285,7 +285,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
                     <Progress 
                       value={studentBook.progress} 
                       className={`h-2 ${studentBook.status === 'reading' ? '[&>div]:bg-purple-500' : ''}`}
-                      style={{ backgroundColor: 'white' }}
+                      style={{ backgroundColor: '#f3f4f6' }}
                     />
                   </div>
                   

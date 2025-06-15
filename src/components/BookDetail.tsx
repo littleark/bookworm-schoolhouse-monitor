@@ -59,7 +59,11 @@ export function BookDetail({ studentBook, studentName, onBack }: BookDetailProps
                   <span>Progress</span>
                   <span className="font-bold text-lg">{studentBook.progress}%</span>
                 </div>
-                <Progress value={studentBook.progress} className="h-3" />
+                <Progress 
+                  value={studentBook.progress} 
+                  className="h-3" 
+                  style={{ backgroundColor: 'white' }}
+                />
               </div>
             </div>
           </div>
