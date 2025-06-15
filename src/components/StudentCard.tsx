@@ -21,8 +21,8 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   };
 
   const activeBooks = student.books.filter(book => book.status === 'reading').length;
-  const recentActivity = student.books
-    .filter(book => book.lastReadDate)
+  const currentlyReading = student.books
+    .filter(book => book.status === 'reading')
     .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
 
   return (
@@ -46,13 +46,25 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span>Overall Progress</span>
-            <span className="font-medium">{student.averageProgress}%</span>
+        {currentlyReading ? (
+          <div>
+            <div className="flex justify-between text-sm mb-2">
+              <span>Currently Reading</span>
+              <span className="font-medium">{currentlyReading.progress}%</span>
+            </div>
+            <Progress value={currentlyReading.progress} className="h-2" />
+            {currentlyReading.lastReadDate && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
+                <Calendar className="w-3 h-3" />
+                <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()}</span>
+              </div>
+            )}
           </div>
-          <Progress value={student.averageProgress} className="h-2" />
-        </div>
+        ) : (
+          <div className="text-sm text-muted-foreground text-center py-4">
+            No books currently being read
+          </div>
+        )}
         
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-1">
@@ -63,13 +75,6 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
             {activeBooks} reading
           </Badge>
         </div>
-        
-        {recentActivity && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            <span>Last read: {recentActivity.lastReadDate?.toLocaleDateString()}</span>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
