@@ -11,8 +11,29 @@ interface StudentListProps {
 }
 
 export function StudentList({ students, onStudentClick }: StudentListProps) {
+  // Generate a consistent color for each student based on their name
+  const getStudentColor = (name: string) => {
+    const colors = [
+      'bg-gradient-to-br from-blue-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-blue-500',
+      'bg-gradient-to-br from-purple-400 to-pink-500',
+      'bg-gradient-to-br from-yellow-400 to-orange-500',
+      'bg-gradient-to-br from-pink-400 to-red-500',
+      'bg-gradient-to-br from-indigo-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-teal-500',
+      'bg-gradient-to-br from-orange-400 to-red-500'
+    ];
+    
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   return (
-    <div className="bg-white rounded-lg border shadow-sm">
+    <div className="bg-white rounded-lg shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>
@@ -39,7 +60,7 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
               >
                 <TableCell>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <div className={`w-8 h-8 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
                       {student.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>

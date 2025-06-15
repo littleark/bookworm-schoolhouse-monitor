@@ -102,14 +102,12 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Class Summary */}
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-6">
-                <p className="text-lg font-bold text-gray-900 leading-relaxed">
-                  {generateClassSummary()}
-                </p>
-              </CardContent>
-            </Card>
+            {/* Class Summary - integrated with background */}
+            <div className="mb-6">
+              <p className="text-lg font-bold text-gray-900 leading-relaxed">
+                {generateClassSummary()}
+              </p>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card className="bg-white shadow-sm">

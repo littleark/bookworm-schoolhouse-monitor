@@ -18,6 +18,27 @@ interface StudentDetailProps {
 export function StudentDetail({ student, onBack, onBookClick }: StudentDetailProps) {
   const [chartDays, setChartDays] = useState<7 | 30>(30);
 
+  // Generate a consistent color for each student based on their name
+  const getStudentColor = (name: string) => {
+    const colors = [
+      'bg-gradient-to-br from-blue-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-blue-500',
+      'bg-gradient-to-br from-purple-400 to-pink-500',
+      'bg-gradient-to-br from-yellow-400 to-orange-500',
+      'bg-gradient-to-br from-pink-400 to-red-500',
+      'bg-gradient-to-br from-indigo-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-teal-500',
+      'bg-gradient-to-br from-orange-400 to-red-500'
+    ];
+    
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   // Generate student progress summary
   const generateProgressSummary = () => {
     const currentlyReading = student.books.filter(book => book.status === 'reading').length;
@@ -108,7 +129,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
       <Card className="bg-white shadow-sm">
         <CardHeader>
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-xl">
+            <div className={`w-16 h-16 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-xl`}>
               {student.name.split(' ').map(n => n[0]).join('')}
             </div>
             <div>
@@ -121,8 +142,8 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
         </CardHeader>
         
         <CardContent>
-          {/* Student Progress Summary */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          {/* Student Progress Summary - integrated with background */}
+          <div className="mb-6">
             <p className="text-lg font-bold text-gray-900 leading-relaxed">
               {generateProgressSummary()}
             </p>

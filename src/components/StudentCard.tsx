@@ -21,6 +21,27 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
     .filter(book => book.status === 'reading')
     .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
 
+  // Generate a consistent color for each student based on their name
+  const getStudentColor = (name: string) => {
+    const colors = [
+      'bg-gradient-to-br from-blue-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-blue-500',
+      'bg-gradient-to-br from-purple-400 to-pink-500',
+      'bg-gradient-to-br from-yellow-400 to-orange-500',
+      'bg-gradient-to-br from-pink-400 to-red-500',
+      'bg-gradient-to-br from-indigo-400 to-purple-500',
+      'bg-gradient-to-br from-green-400 to-teal-500',
+      'bg-gradient-to-br from-orange-400 to-red-500'
+    ];
+    
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   // Generate daily reading progress data for the specified number of days
   const generateDailyData = (days: number) => {
     const dataPoints = [];
@@ -70,7 +91,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
     >
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          <div className={`w-12 h-12 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
             {student.name.split(' ').map(n => n[0]).join('')}
           </div>
           <div className="flex-1">
