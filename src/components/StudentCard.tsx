@@ -57,7 +57,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-br from-white to-blue-50"
+      className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-br from-white to-blue-50 h-fit"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -138,26 +138,28 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
               </button>
             </div>
           </div>
-          <div className="h-12">
-            <ChartContainer config={chartConfig}>
-              <BarChart data={dailyData}>
-                <XAxis 
-                  dataKey="day" 
-                  tick={{ fontSize: 8 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis hide />
-                <ChartTooltip 
-                  content={<ChartTooltipContent />}
-                  cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
-                />
-                <Bar 
-                  dataKey="pages" 
-                  fill="#000000"
-                  radius={[1, 1, 0, 0]}
-                />
-              </BarChart>
+          <div className="h-[100px] w-full overflow-hidden">
+            <ChartContainer config={chartConfig} className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dailyData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 8 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis hide />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                  />
+                  <Bar 
+                    dataKey="pages" 
+                    fill="#000000"
+                    radius={[1, 1, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </div>
         </div>
