@@ -1,4 +1,5 @@
 
+
 import { Student } from '@/types/reading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -124,15 +125,20 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
               {student.books.length} books assigned
             </p>
           </div>
-          {currentlyReading && (
-            <div className="w-16 h-20 rounded-md overflow-hidden">
+          {/* Always show book cover area to maintain alignment */}
+          <div className="w-16 h-20 rounded-md overflow-hidden">
+            {currentlyReading ? (
               <img 
                 src={currentlyReading.book.cover} 
                 alt={currentlyReading.book.title}
                 className="w-full h-full object-cover"
               />
-            </div>
-          )}
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <Book className="w-6 h-6 text-gray-400" />
+              </div>
+            )}
+          </div>
         </div>
       </CardHeader>
       
@@ -246,3 +252,4 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
     </Card>
   );
 }
+
