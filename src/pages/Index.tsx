@@ -92,18 +92,9 @@ const Index = () => {
       default:
         return (
           <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Reading Progress Dashboard
-                </h1>
-                <p className="text-gray-600">Track your students' reading journey</p>
-              </div>
-            </div>
-
-            {/* Class Summary - integrated with background */}
-            <div className="mb-6">
-              <p className="text-lg font-bold text-gray-900 leading-relaxed">
+            {/* Class Summary - larger and more prominent */}
+            <div className="mb-8">
+              <p className="text-2xl font-bold text-gray-900 leading-relaxed">
                 {generateClassSummary()}
               </p>
             </div>
