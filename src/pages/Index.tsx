@@ -110,7 +110,7 @@ export default function Index() {
     <div className="space-y-6">
       {/* Dynamic Summary */}
       <div className="text-left mb-8">
-        <h2 className="text-xl font-semibold text-gray-700 leading-relaxed">
+        <h2 className="text-2xl font-serif font-medium text-gray-800 leading-relaxed">
           {generateDynamicSummary()}
         </h2>
       </div>
