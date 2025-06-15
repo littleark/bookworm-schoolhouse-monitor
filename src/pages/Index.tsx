@@ -30,6 +30,24 @@ const Index = () => {
     mockStudents.reduce((sum, student) => sum + student.averageProgress, 0) / totalStudents
   );
 
+  // Generate class summary sentence
+  const generateClassSummary = () => {
+    const activeReaders = mockStudents.filter(student => 
+      student.books.some(book => book.status === 'reading')
+    ).length;
+    const completionRate = Math.round((completedBooks / totalBooks) * 100);
+    
+    if (averageProgress >= 80) {
+      return `Your class is excelling with ${averageProgress}% average progress! ${activeReaders} students are actively reading and maintaining excellent momentum.`;
+    } else if (averageProgress >= 60) {
+      return `Your class is making solid progress with ${averageProgress}% completion rate. ${activeReaders} students are currently engaged in reading activities.`;
+    } else if (averageProgress >= 40) {
+      return `Your class is building reading habits with ${averageProgress}% average progress. ${activeReaders} students are actively working through their books.`;
+    } else {
+      return `Your class is in the early stages of their reading journey with ${activeReaders} students currently reading. Great potential for growth ahead!`;
+    }
+  };
+
   const handleStudentClick = (student: Student) => {
     setSelectedStudent(student);
     setCurrentView('student-detail');
@@ -82,6 +100,15 @@ const Index = () => {
                 <p className="text-muted-foreground">Track your students' reading journey</p>
               </div>
             </div>
+
+            {/* Class Summary */}
+            <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+              <CardContent className="p-6">
+                <p className="text-lg font-bold text-indigo-900 leading-relaxed">
+                  {generateClassSummary()}
+                </p>
+              </CardContent>
+            </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card className="bg-gradient-to-br from-blue-50 to-blue-100">

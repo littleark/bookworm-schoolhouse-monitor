@@ -1,4 +1,3 @@
-
 import { Student, StudentBook } from '@/types/reading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -17,6 +16,27 @@ interface StudentDetailProps {
 
 export function StudentDetail({ student, onBack, onBookClick }: StudentDetailProps) {
   const [chartDays, setChartDays] = useState<7 | 30>(30);
+
+  // Generate student progress summary
+  const generateProgressSummary = () => {
+    const currentlyReading = student.books.filter(book => book.status === 'reading').length;
+    const recentlyActive = student.books.filter(book => 
+      book.lastReadDate && 
+      (new Date().getTime() - book.lastReadDate.getTime()) / (1000 * 60 * 60 * 24) <= 3
+    ).length;
+
+    if (student.averageProgress >= 85) {
+      return `${student.name} is an exceptional reader with ${student.averageProgress}% average progress and ${student.totalBooksCompleted} books completed!`;
+    } else if (student.averageProgress >= 70) {
+      return `${student.name} is making excellent progress with ${student.averageProgress}% completion rate and ${currentlyReading} books currently in progress.`;
+    } else if (student.averageProgress >= 50) {
+      return `${student.name} is steadily progressing through their reading journey with ${student.totalBooksCompleted} books completed so far.`;
+    } else if (recentlyActive > 0) {
+      return `${student.name} is actively building their reading habits with recent activity on ${recentlyActive} books.`;
+    } else {
+      return `${student.name} has great potential and is ready to dive deeper into their reading adventure!`;
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     const variants = {
@@ -100,6 +120,13 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
         </CardHeader>
         
         <CardContent>
+          {/* Student Progress Summary */}
+          <div className="mb-6 p-4 bg-white/60 rounded-lg border border-blue-200">
+            <p className="text-lg font-bold text-blue-900 leading-relaxed">
+              {generateProgressSummary()}
+            </p>
+          </div>
+
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold text-green-600">{student.totalBooksCompleted}</p>
