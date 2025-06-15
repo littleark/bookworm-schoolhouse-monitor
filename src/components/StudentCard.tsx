@@ -79,7 +79,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
     },
     currentPages: {
       label: "Current Book Pages",
-      color: "#374151", // Dark gray for current book
+      color: "#8b5cf6", // Purple for current book
     },
   };
 
@@ -190,7 +190,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                     {dailyData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
-                        fill={entry.isCurrentBook ? "#374151" : "#9ca3af"} 
+                        fill={entry.isCurrentBook ? "#8b5cf6" : "#9ca3af"} 
                       />
                     ))}
                   </Bar>

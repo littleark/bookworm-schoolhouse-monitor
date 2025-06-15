@@ -112,7 +112,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
     },
     currentPages: {
       label: "Current Book Pages",
-      color: "#374151", // Dark gray for current book
+      color: "#8b5cf6", // Purple for current book
     },
   };
 
@@ -227,7 +227,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
                     {dailyData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
-                        fill={entry.isCurrentBook ? "#374151" : "#9ca3af"} 
+                        fill={entry.isCurrentBook ? "#8b5cf6" : "#9ca3af"} 
                       />
                     ))}
                   </Bar>
@@ -241,7 +241,7 @@ export function StudentDetail({ student, onBack, onBookClick }: StudentDetailPro
               <span className="text-gray-600">Previous books</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gray-700 rounded"></div>
+              <div className="w-3 h-3 bg-purple-500 rounded"></div>
               <span className="text-gray-600">Current book</span>
             </div>
           </div>
