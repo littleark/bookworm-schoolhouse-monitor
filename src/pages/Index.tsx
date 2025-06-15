@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { StudentCard } from "@/components/StudentCard";
 import { StudentList } from "@/components/StudentList";
@@ -14,7 +13,6 @@ import {
   GraduationCap,
   LayoutGrid,
   LayoutList,
-  BookOpen,
 } from "lucide-react";
 import { mockStudents } from "@/data/mockData";
 import { Student, StudentBook } from "@/types/reading";
@@ -86,144 +84,119 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Header Bar */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Bookworm</h1>
-              </div>
+    <div className="space-y-6">
+      {/* Dynamic Summary */}
+      <div className="text-left mb-8">
+        <h2 className="text-xl font-semibold text-gray-700 leading-relaxed">
+          {generateDynamicSummary()}
+        </h2>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900">
+              Total Students
+            </CardTitle>
+            <Users className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900">
+              {totalStudents}
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600 font-medium">
-                Teacher's Dashboard
-              </p>
+            <p className="text-xs text-gray-500">enrolled students</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900">
+              Books Completed
+            </CardTitle>
+            <Book className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900">
+              {totalCompleted}
             </div>
-          </div>
+            <p className="text-xs text-gray-500">across all students</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900">
+              Currently Reading
+            </CardTitle>
+            <GraduationCap className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900">
+              {activelyReading}
+            </div>
+            <p className="text-xs text-gray-500">students reading now</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-900">
+              Average Progress
+            </CardTitle>
+            <BarChart3 className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900">
+              {averageProgress}%
+            </div>
+            <p className="text-xs text-gray-500">completion rate</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* View Toggle */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-gray-900">Students</h2>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === "grid" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("grid")}
+            className="text-xs"
+          >
+            <LayoutGrid className="w-4 h-4 mr-1" />
+            Cards
+          </Button>
+          <Button
+            variant={viewMode === "list" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("list")}
+            className="text-xs"
+          >
+            <LayoutList className="w-4 h-4 mr-1" />
+            List
+          </Button>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Dynamic Summary */}
-          <div className="text-left mb-8">
-            <h2 className="text-xl font-semibold text-gray-700 leading-relaxed">
-              {generateDynamicSummary()}
-            </h2>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-900">
-                  Total Students
-                </CardTitle>
-                <Users className="h-4 w-4 text-gray-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">
-                  {totalStudents}
-                </div>
-                <p className="text-xs text-gray-500">enrolled students</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-900">
-                  Books Completed
-                </CardTitle>
-                <Book className="h-4 w-4 text-gray-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">
-                  {totalCompleted}
-                </div>
-                <p className="text-xs text-gray-500">across all students</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-900">
-                  Currently Reading
-                </CardTitle>
-                <GraduationCap className="h-4 w-4 text-gray-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">
-                  {activelyReading}
-                </div>
-                <p className="text-xs text-gray-500">students reading now</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-900">
-                  Average Progress
-                </CardTitle>
-                <BarChart3 className="h-4 w-4 text-gray-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">
-                  {averageProgress}%
-                </div>
-                <p className="text-xs text-gray-500">completion rate</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* View Toggle */}
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900">Students</h2>
-            <div className="flex gap-2">
-              <Button
-                variant={viewMode === "grid" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("grid")}
-                className="text-xs"
-              >
-                <LayoutGrid className="w-4 h-4 mr-1" />
-                Cards
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("list")}
-                className="text-xs"
-              >
-                <LayoutList className="w-4 h-4 mr-1" />
-                List
-              </Button>
-            </div>
-          </div>
-
-          {/* Students Grid/List */}
-          {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockStudents.map((student) => (
-                <StudentCard
-                  key={student.id}
-                  student={student}
-                  onClick={() => setSelectedStudent(student)}
-                />
-              ))}
-            </div>
-          ) : (
-            <StudentList
-              students={mockStudents}
-              onStudentClick={setSelectedStudent}
+      {/* Students Grid/List */}
+      {viewMode === "grid" ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {mockStudents.map((student) => (
+            <StudentCard
+              key={student.id}
+              student={student}
+              onClick={() => setSelectedStudent(student)}
             />
-          )}
+          ))}
         </div>
-      </div>
+      ) : (
+        <StudentList
+          students={mockStudents}
+          onStudentClick={setSelectedStudent}
+        />
+      )}
     </div>
   );
 }
