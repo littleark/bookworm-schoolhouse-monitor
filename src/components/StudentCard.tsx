@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Book, Calendar, User } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { useState } from 'react';
 
 interface StudentCardProps {
   student: Student;
@@ -13,40 +14,44 @@ interface StudentCardProps {
 }
 
 export function StudentCard({ student, onClick }: StudentCardProps) {
+  const [chartDays, setChartDays] = useState<7 | 30>(7);
+  
   const activeBooks = student.books.filter(book => book.status === 'reading').length;
   const currentlyReading = student.books
     .filter(book => book.status === 'reading')
     .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
 
-  // Generate daily reading progress data for the last 7 days
-  const generateDailyData = () => {
-    const days = [];
+  // Generate daily reading progress data for the specified number of days
+  const generateDailyData = (days: number) => {
+    const dataPoints = [];
     const today = new Date();
     
-    for (let i = 6; i >= 0; i--) {
+    for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayName = days === 7 
+        ? date.toLocaleDateString('en-US', { weekday: 'short' })
+        : date.getDate().toString();
       
       // Simulate reading progress for each day (in a real app, this would come from sessions)
       const progress = Math.random() * 20; // 0-20 pages read per day
       
-      days.push({
+      dataPoints.push({
         day: dayName,
         pages: Math.round(progress),
         date: date.toISOString().split('T')[0]
       });
     }
     
-    return days;
+    return dataPoints;
   };
 
-  const dailyData = generateDailyData();
+  const dailyData = generateDailyData(chartDays);
 
   const chartConfig = {
     pages: {
       label: "Pages Read",
-      color: "#3b82f6",
+      color: "#000000",
     },
   };
 
@@ -83,7 +88,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         {currentlyReading ? (
           <div>
             <div className="flex justify-between text-sm mb-2">
-              <span>Currently Reading</span>
+              <span className="font-medium truncate">{currentlyReading.book.title}</span>
               <span className="font-medium">{currentlyReading.progress}%</span>
             </div>
             <Progress value={currentlyReading.progress} className="h-2" />
@@ -102,25 +107,55 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
 
         {/* Daily Reading Progress Chart */}
         <div className="mt-4">
-          <p className="text-sm font-medium mb-2">Reading Activity (Last 7 Days)</p>
-          <div className="h-16">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm font-medium">Reading Activity</p>
+            <div className="flex gap-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setChartDays(7);
+                }}
+                className={`text-xs px-2 py-1 rounded ${
+                  chartDays === 7 
+                    ? 'bg-black text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                7d
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setChartDays(30);
+                }}
+                className={`text-xs px-2 py-1 rounded ${
+                  chartDays === 30 
+                    ? 'bg-black text-white' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                30d
+              </button>
+            </div>
+          </div>
+          <div className="h-12">
             <ChartContainer config={chartConfig}>
               <BarChart data={dailyData}>
                 <XAxis 
                   dataKey="day" 
-                  tick={{ fontSize: 10 }}
+                  tick={{ fontSize: 8 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis hide />
                 <ChartTooltip 
                   content={<ChartTooltipContent />}
-                  cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                  cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
                 />
                 <Bar 
                   dataKey="pages" 
-                  fill="var(--color-pages)"
-                  radius={[2, 2, 0, 0]}
+                  fill="#000000"
+                  radius={[1, 1, 0, 0]}
                 />
               </BarChart>
             </ChartContainer>
