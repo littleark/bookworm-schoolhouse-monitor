@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import { BookOpen, ChevronDown, LogOut, User } from "lucide-react";
 import { useTeacher } from "@/hooks/useStudents";
@@ -10,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import logo from "../assets/img/logo.png";
 
 interface LayoutProps {
   children: ReactNode;
@@ -30,11 +30,16 @@ export const Layout = ({ children }: LayoutProps) => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+              <div className="w-10 h-10  flex items-center justify-center">
+                <img
+                  src={logo}
+                  alt="Miotomo"
+                  className="max-h-full w-full max-w-md object-contain p-0"
+                  style={{ objectFit: "contain" }}
+                />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Bookworm</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Miotomo</h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -43,11 +48,13 @@ export const Layout = ({ children }: LayoutProps) => {
               ) : teacher ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
                     >
-                      <span className="text-sm font-medium">{teacher.name}</span>
+                      <span className="text-sm font-medium">
+                        {teacher.name}
+                      </span>
                       <ChevronDown className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -57,7 +64,7 @@ export const Layout = ({ children }: LayoutProps) => {
                       <span>Profile</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       className="flex items-center space-x-2 text-red-600 focus:text-red-600"
                       onClick={handleLogout}
                     >
@@ -67,9 +74,7 @@ export const Layout = ({ children }: LayoutProps) => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="text-sm text-gray-600">
-                  Teacher's Dashboard
-                </div>
+                <div className="text-sm text-gray-600">Teacher's Dashboard</div>
               )}
             </div>
           </div>
@@ -78,9 +83,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
       {/* Main Content with top padding to account for fixed header */}
       <div className="pt-20 p-6">
-        <div className="max-w-7xl mx-auto">
-          {children}
-        </div>
+        <div className="max-w-7xl mx-auto">{children}</div>
       </div>
     </div>
   );

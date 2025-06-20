@@ -20,7 +20,7 @@ import { useStudents } from "@/hooks/useStudents";
 export default function Index() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedBook, setSelectedBook] = useState<StudentBook | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const { data: students = [], isLoading, error } = useStudents();
 

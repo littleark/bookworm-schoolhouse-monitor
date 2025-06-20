@@ -1,12 +1,22 @@
-
-import { Student } from '@/types/reading';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Book, Calendar, User, BarChart3 } from 'lucide-react';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
-import { useState } from 'react';
+import { Student } from "@/types/reading";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Book, Calendar, User, BarChart3 } from "lucide-react";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import { useState } from "react";
 
 interface StudentCardProps {
   student: Student;
@@ -15,19 +25,24 @@ interface StudentCardProps {
 
 export function StudentCard({ student, onClick }: StudentCardProps) {
   const [chartDays, setChartDays] = useState<7 | 30>(7);
-  
-  const activeBooks = student.books.filter(book => book.status === 'reading').length;
+
+  const activeBooks = student.books.filter(
+    (book) => book.status === "reading",
+  ).length;
   const currentlyReading = student.books
-    .filter(book => book.status === 'reading')
-    .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
+    .filter((book) => book.status === "reading")
+    .sort(
+      (a, b) =>
+        (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0),
+    )[0];
 
   // Get the most recent read date from any book
   const getLastReadDate = () => {
     const allDates = student.books
-      .map(book => book.lastReadDate)
-      .filter(date => date !== null && date !== undefined)
+      .map((book) => book.lastReadDate)
+      .filter((date) => date !== null && date !== undefined)
       .sort((a, b) => (b?.getTime() || 0) - (a?.getTime() || 0));
-    
+
     return allDates.length > 0 ? allDates[0] : null;
   };
 
@@ -36,21 +51,21 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   // Generate a consistent color for each student based on their name
   const getStudentColor = (name: string) => {
     const colors = [
-      'bg-gradient-to-br from-blue-400 to-purple-500',
-      'bg-gradient-to-br from-green-400 to-blue-500',
-      'bg-gradient-to-br from-purple-400 to-pink-500',
-      'bg-gradient-to-br from-yellow-400 to-orange-500',
-      'bg-gradient-to-br from-pink-400 to-red-500',
-      'bg-gradient-to-br from-indigo-400 to-purple-500',
-      'bg-gradient-to-br from-green-400 to-teal-500',
-      'bg-gradient-to-br from-orange-400 to-red-500'
+      "bg-gradient-to-br from-blue-400 to-purple-500",
+      "bg-gradient-to-br from-green-400 to-blue-500",
+      "bg-gradient-to-br from-purple-400 to-pink-500",
+      "bg-gradient-to-br from-yellow-400 to-orange-500",
+      "bg-gradient-to-br from-pink-400 to-red-500",
+      "bg-gradient-to-br from-indigo-400 to-purple-500",
+      "bg-gradient-to-br from-green-400 to-teal-500",
+      "bg-gradient-to-br from-orange-400 to-red-500",
     ];
-    
-    const hash = name.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
+
+    const hash = name.split("").reduce((a, b) => {
+      a = (a << 5) - a + b.charCodeAt(0);
       return a & a;
     }, 0);
-    
+
     return colors[Math.abs(hash) % colors.length];
   };
 
@@ -58,43 +73,44 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   const generateDailyData = (days: number) => {
     const dataPoints = [];
     const today = new Date();
-    
+
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dayName = days === 7 
-        ? date.toLocaleDateString('en-US', { weekday: 'short' })
-        : date.getDate().toString();
-      
+      const dayName =
+        days === 7
+          ? date.toLocaleDateString("en-US", { weekday: "short" })
+          : date.getDate().toString();
+
       // If no current book, show past reading activity with gray bars
       if (!currentlyReading) {
         // Show some activity in the past for students not currently reading
         const shouldShowActivity = days === 7 ? i >= days - 2 : i >= days - 25; // Last 2 days for 7d, last 25 days for 30d
         const progress = shouldShowActivity ? Math.random() * 15 + 5 : 0; // 5-20 pages when there was activity
-        
+
         dataPoints.push({
           day: dayName,
           pages: Math.round(progress),
-          date: date.toISOString().split('T')[0],
-          isCurrentBook: false
+          date: date.toISOString().split("T")[0],
+          isCurrentBook: false,
         });
         continue;
       }
-      
+
       // Simulate reading progress for each day (in a real app, this would come from sessions)
       const progress = Math.random() * 20; // 0-20 pages read per day
-      
+
       // Determine if this is for current book (last 30% of days) or old books
       const isCurrentBook = i < Math.ceil(days * 0.3);
-      
+
       dataPoints.push({
         day: dayName,
         pages: Math.round(progress),
-        date: date.toISOString().split('T')[0],
-        isCurrentBook
+        date: date.toISOString().split("T")[0],
+        isCurrentBook,
       });
     }
-    
+
     return dataPoints;
   };
 
@@ -112,17 +128,24 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
   };
 
   return (
-    <Card 
+    <Card
       className="cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white h-fit transform"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
-          <div className={`w-12 h-12 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
-            {student.name.split(' ').map(n => n[0]).join('')}
+          <div
+            className={`w-12 h-12 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-lg`}
+          >
+            {student.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
           </div>
           <div className="flex-1">
-            <CardTitle className="text-lg text-gray-900">{student.name}</CardTitle>
+            <CardTitle className="text-lg text-gray-900">
+              {student.name}
+            </CardTitle>
             <p className="text-sm text-gray-600 flex items-center gap-1">
               <User className="w-3 h-3" />
               {student.books.length} books assigned
@@ -131,8 +154,8 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
           {/* Always show book cover area to maintain alignment */}
           <div className="w-16 h-20 rounded-md overflow-hidden">
             {currentlyReading ? (
-              <img 
-                src={currentlyReading.book.cover} 
+              <img
+                src={currentlyReading.book.cover}
                 alt={currentlyReading.book.title}
                 className="w-full h-full object-cover"
               />
@@ -144,33 +167,55 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <div className="min-h-[80px]">
           {currentlyReading ? (
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="font-medium truncate text-gray-900">{currentlyReading.book.title}</span>
-                <span className="font-medium text-gray-900">{currentlyReading.progress}%</span>
+                <span className="font-medium truncate text-gray-900">
+                  {currentlyReading.book.title}
+                </span>
+                <span className="font-medium text-gray-900">
+                  {currentlyReading.progress}%
+                </span>
               </div>
-              <Progress value={currentlyReading.progress} className="h-2 bg-gray-200" />
+              <Progress
+                value={currentlyReading.progress}
+                className="h-2 bg-gray-200"
+              />
               {currentlyReading.lastReadDate && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
                   <Calendar className="w-3 h-3" />
-                  <span>Last read: {currentlyReading.lastReadDate.toLocaleDateString()} at {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span>
+                    Last read:{" "}
+                    {currentlyReading.lastReadDate.toLocaleDateString()} at{" "}
+                    {currentlyReading.lastReadDate.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
               )}
             </div>
           ) : (
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="font-medium text-gray-500">No books currently being read</span>
+                <span className="font-medium text-gray-500">
+                  No books currently being read
+                </span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full mb-2"></div>
               {lastReadDate && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
                   <Calendar className="w-3 h-3" />
-                  <span>Last read: {lastReadDate.toLocaleDateString()} at {lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span>
+                    Last read: {lastReadDate.toLocaleDateString()} at{" "}
+                    {lastReadDate.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
               )}
             </div>
@@ -180,7 +225,9 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         {/* Daily Reading Progress Chart */}
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
-            <p className="text-sm font-medium text-gray-900">Reading Activity</p>
+            <p className="text-sm font-medium text-gray-900">
+              Reading Activity
+            </p>
             <div className="flex gap-1">
               <button
                 onClick={(e) => {
@@ -188,9 +235,9 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                   setChartDays(7);
                 }}
                 className={`text-xs px-2 py-1 rounded ${
-                  chartDays === 7 
-                    ? 'bg-gray-900 text-white' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  chartDays === 7
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 7d
@@ -201,9 +248,9 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                   setChartDays(30);
                 }}
                 className={`text-xs px-2 py-1 rounded ${
-                  chartDays === 30 
-                    ? 'bg-gray-900 text-white' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  chartDays === 30
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 30d
@@ -213,26 +260,26 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
           <div className="h-[100px] w-full overflow-hidden">
             <ChartContainer config={chartConfig} className="h-full w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dailyData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                  <XAxis 
-                    dataKey="day" 
+                <BarChart
+                  data={dailyData}
+                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                >
+                  <XAxis
+                    dataKey="day"
                     tick={{ fontSize: 8 }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis hide />
-                  <ChartTooltip 
+                  <ChartTooltip
                     content={<ChartTooltipContent />}
-                    cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                    cursor={{ fill: "rgba(0, 0, 0, 0.1)" }}
                   />
-                  <Bar 
-                    dataKey="pages" 
-                    radius={[1, 1, 0, 0]}
-                  >
+                  <Bar dataKey="pages" radius={[1, 1, 0, 0]}>
                     {dailyData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={entry.isCurrentBook ? "#8b5cf6" : "#9ca3af"} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.isCurrentBook ? "#8b5cf6" : "#9ca3af"}
                       />
                     ))}
                   </Bar>
@@ -241,13 +288,18 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
             </ChartContainer>
           </div>
         </div>
-        
+
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-1">
             <Book className="w-4 h-4 text-gray-600" />
-            <span className="text-gray-900">{student.totalBooksCompleted} completed</span>
+            <span className="text-gray-900">
+              {student.totalBooksCompleted} completed
+            </span>
           </div>
-          <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-700">
+          <Badge
+            variant="secondary"
+            className="text-xs bg-gray-100 text-gray-700"
+          >
             {activeBooks} reading
           </Badge>
         </div>
