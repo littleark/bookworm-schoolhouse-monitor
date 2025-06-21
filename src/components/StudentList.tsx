@@ -1,8 +1,15 @@
-import { Student } from '@/types/reading';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Book, Calendar, User } from 'lucide-react';
+import { Student } from "@/types/reading";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Book, Calendar, User } from "lucide-react";
 
 interface StudentListProps {
   students: Student[];
@@ -13,21 +20,21 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
   // Generate a consistent color for each student based on their name
   const getStudentColor = (name: string) => {
     const colors = [
-      'bg-gradient-to-br from-blue-400 to-purple-500',
-      'bg-gradient-to-br from-green-400 to-blue-500',
-      'bg-gradient-to-br from-purple-400 to-pink-500',
-      'bg-gradient-to-br from-yellow-400 to-orange-500',
-      'bg-gradient-to-br from-pink-400 to-red-500',
-      'bg-gradient-to-br from-indigo-400 to-purple-500',
-      'bg-gradient-to-br from-green-400 to-teal-500',
-      'bg-gradient-to-br from-orange-400 to-red-500'
+      "bg-gradient-to-br from-blue-400 to-purple-500",
+      "bg-gradient-to-br from-green-400 to-blue-500",
+      "bg-gradient-to-br from-purple-400 to-pink-500",
+      "bg-gradient-to-br from-yellow-400 to-orange-500",
+      "bg-gradient-to-br from-pink-400 to-red-500",
+      "bg-gradient-to-br from-indigo-400 to-purple-500",
+      "bg-gradient-to-br from-green-400 to-teal-500",
+      "bg-gradient-to-br from-orange-400 to-red-500",
     ];
-    
-    const hash = name.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
+
+    const hash = name.split("").reduce((a, b) => {
+      a = (a << 5) - a + b.charCodeAt(0);
       return a & a;
     }, 0);
-    
+
     return colors[Math.abs(hash) % colors.length];
   };
 
@@ -38,7 +45,8 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
           <TableRow>
             <TableHead>Student</TableHead>
             <TableHead>Currently Reading</TableHead>
-            <TableHead>Progress</TableHead>
+            <TableHead>Minutes</TableHead>
+            <TableHead>Spelling</TableHead>
             <TableHead>Last Read</TableHead>
             <TableHead>Completed</TableHead>
             <TableHead>Active</TableHead>
@@ -47,20 +55,31 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
         <TableBody>
           {students.map((student) => {
             const currentlyReading = student.books
-              .filter(book => book.status === 'reading')
-              .sort((a, b) => (b.lastReadDate?.getTime() || 0) - (a.lastReadDate?.getTime() || 0))[0];
-            const activeBooks = student.books.filter(book => book.status === 'reading').length;
+              .filter((book) => book.status === "reading")
+              .sort(
+                (a, b) =>
+                  (b.lastReadDate?.getTime() || 0) -
+                  (a.lastReadDate?.getTime() || 0),
+              )[0];
+            const activeBooks = student.books.filter(
+              (book) => book.status === "reading",
+            ).length;
 
             return (
-              <TableRow 
-                key={student.id} 
+              <TableRow
+                key={student.id}
                 className="cursor-pointer hover:bg-gray-50 hover:shadow-md transition-all duration-200"
                 onClick={() => onStudentClick(student)}
               >
                 <TableCell>
                   <div className="flex items-center space-x-3">
-                    <div className={`w-8 h-8 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
-                      {student.name.split(' ').map(n => n[0]).join('')}
+                    <div
+                      className={`w-8 h-8 ${getStudentColor(student.name)} rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                    >
+                      {student.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </div>
                     <div>
                       <div className="font-medium">{student.name}</div>
@@ -73,16 +92,42 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
                 </TableCell>
                 <TableCell>
                   {currentlyReading ? (
-                    <div className="font-medium text-sm">{currentlyReading.book.title}</div>
+                    <div className="font-medium text-sm">
+                      {currentlyReading.book.title}
+                    </div>
                   ) : (
-                    <span className="text-muted-foreground text-sm">No active book</span>
+                    <span className="text-muted-foreground text-sm">
+                      No active book
+                    </span>
                   )}
                 </TableCell>
                 <TableCell>
                   {currentlyReading ? (
                     <div className="flex items-center gap-2">
-                      <Progress value={currentlyReading.progress} className="h-2 w-16" />
-                      <span className="text-sm font-medium">{currentlyReading.progress}%</span>
+                      {/* <Progress
+                        value={currentlyReading.progress}
+                        className="h-2 w-16"
+                      /> */}
+                      <span className="text-sm font-medium">
+                        {currentlyReading.progress}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {currentlyReading ? (
+                    <div className="flex items-center gap-2">
+                      {/* <Progress
+                        value={currentlyReading.progress}
+                        className="h-2 w-16"
+                      /> */}
+                      <span className="text-sm font-medium">
+                        {Math.round(
+                          (currentlyReading.progress / 2) * Math.random(),
+                        )}
+                      </span>
                     </div>
                   ) : (
                     <span className="text-muted-foreground text-sm">-</span>
@@ -91,9 +136,14 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
                 <TableCell>
                   {currentlyReading?.lastReadDate ? (
                     <div className="text-sm">
-                      <div>{currentlyReading.lastReadDate.toLocaleDateString()}</div>
+                      <div>
+                        {currentlyReading.lastReadDate.toLocaleDateString()}
+                      </div>
                       <div className="text-xs text-muted-foreground">
-                        {currentlyReading.lastReadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {currentlyReading.lastReadDate.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </div>
                     </div>
                   ) : (
@@ -103,7 +153,9 @@ export function StudentList({ students, onStudentClick }: StudentListProps) {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Book className="w-4 h-4 text-green-600" />
-                    <span className="font-medium">{student.totalBooksCompleted}</span>
+                    <span className="font-medium">
+                      {student.totalBooksCompleted}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell>

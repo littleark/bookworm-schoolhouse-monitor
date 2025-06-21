@@ -67,9 +67,9 @@ export function StudentDetail({
     ).length;
 
     if (student.averageProgress >= 85) {
-      return `${student.name} is an exceptional reader with ${student.averageProgress}% average progress and ${student.totalBooksCompleted} book${student.totalBooksCompleted > 1 ? "s" : ""} completed!`;
+      return `${student.name} is an exceptional reader with ${student.averageProgress}% correct spelling and ${student.totalBooksCompleted} book${student.totalBooksCompleted > 1 ? "s" : ""} completed!`;
     } else if (student.averageProgress >= 70) {
-      return `${student.name} is making excellent progress with ${student.averageProgress}% completion rate and ${currentlyReading} book${currentlyReading > 1 ? "s" : ""} currently in progress.`;
+      return `${student.name} is making excellent progress with ${student.averageProgress}% correct spelling rate and ${currentlyReading} book${currentlyReading > 1 ? "s" : ""} currently in progress.`;
     } else if (student.averageProgress >= 50) {
       return `${student.name} is steadily progressing through their reading journey with ${student.totalBooksCompleted} book${student.totalBooksCompleted > 1 ? "s" : ""} completed so far.`;
     } else if (recentlyActive > 0) {
@@ -112,7 +112,7 @@ export function StudentDetail({
           : date.getDate().toString();
 
       // Simulate reading progress for each day
-      const progress = Math.random() * 25; // 0-25 pages read per day
+      const progress = Math.random() * 10; // 0-25 pages read per day
 
       // Determine if this is for current book (last 30% of days) or old books
       const isCurrentBook = i < Math.ceil(days * 0.3);
@@ -163,22 +163,33 @@ export function StudentDetail({
 
   const chartConfig = {
     pages: {
-      label: "Pages Read",
+      label: "Minutes",
       color: "#9ca3af", // Gray for old books
     },
     currentPages: {
-      label: "Current Book Pages",
+      label: "Current Book Minutes",
       color: "#8b5cf6", // Purple for current book
     },
   };
 
   const spellingChartConfig = {
     successfulSpelling: {
-      label: "Successful Spelling",
+      label: "Correct",
       color: "#10b981", // Green for successful
     },
     wrongSpelling: {
-      label: "Wrong Spelling",
+      label: "Wrong",
+      color: "#ef4444", // Red for wrong
+    },
+  };
+
+  const answersChartConfig = {
+    successfulSpelling: {
+      label: "In-context",
+      color: "#10b981", // Green for successful
+    },
+    wrongSpelling: {
+      label: "Out-of-context",
       color: "#ef4444", // Red for wrong
     },
   };
@@ -239,7 +250,7 @@ export function StudentDetail({
               <p className="text-2xl font-bold text-gray-900">
                 {student.averageProgress}%
               </p>
-              <p className="text-sm text-gray-600">Avg Progress</p>
+              <p className="text-sm text-gray-600">Correct spelling</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -257,7 +268,7 @@ export function StudentDetail({
           <div className="flex justify-between items-center">
             <CardTitle className="flex items-center gap-2 text-gray-900">
               <BarChart3 className="w-5 h-5" />
-              Reading Activity
+              Talking time
             </CardTitle>
             <div className="flex gap-1">
               <button
@@ -305,7 +316,7 @@ export function StudentDetail({
                       top: 10,
                     }}
                     label={{
-                      value: "Pages",
+                      value: "Minutes",
                       angle: 0,
                       position: "top",
                     }}
@@ -339,12 +350,12 @@ export function StudentDetail({
         </CardContent>
       </Card>
 
-      <Card id="spellingActivity" className="bg-white shadow-sm">
+      <Card id="anwersActivity" className="bg-white shadow-sm">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle className="flex items-center gap-2 text-gray-900">
               <BarChart3 className="w-5 h-5" />
-              Spelling Activity
+              Question answered
             </CardTitle>
             <div className="flex gap-1">
               <button
@@ -423,11 +434,105 @@ export function StudentDetail({
           <div className="flex justify-center gap-6 mt-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-[#9ca3af] rounded"></div>
+              <span className="text-gray-600">Out-of-context answers</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-[#E85C33] rounded"></div>
+              <span className="text-gray-600">In-context answers</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card id="spellingActivity" className="bg-white shadow-sm">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2 text-gray-900">
+              <BarChart3 className="w-5 h-5" />
+              Spelling Activity
+            </CardTitle>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setChartDays(7)}
+                className={`text-xs px-3 py-1 rounded ${
+                  chartDays === 7
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                7 days
+              </button>
+              <button
+                onClick={() => setChartDays(30)}
+                className={`text-xs px-3 py-1 rounded ${
+                  chartDays === 30
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                30 days
+              </button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[200px] w-full">
+            <ChartContainer
+              config={answersChartConfig}
+              className="h-full w-full"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={spellingData}
+                  margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+                >
+                  <XAxis
+                    dataKey="day"
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                    padding={{
+                      top: 10,
+                    }}
+                    label={{
+                      value: "Attempts",
+                      angle: 0,
+                      position: "top",
+                    }}
+                  />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                    cursor={{ fill: "rgba(0, 0, 0, 0.1)" }}
+                  />
+                  <Bar
+                    dataKey="successfulSpelling"
+                    stackId="spelling"
+                    fill="#E85C33"
+                    radius={[0, 0, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="wrongSpelling"
+                    stackId="spelling"
+                    fill="#9ca3af"
+                    radius={[2, 2, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </div>
+          <div className="flex justify-center gap-6 mt-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-[#9ca3af] rounded"></div>
               <span className="text-gray-600">Wrong spelling</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-[#E85C33] rounded"></div>
-              <span className="text-gray-600">Successful spelling</span>
+              <span className="text-gray-600">Correct spelling</span>
             </div>
           </div>
         </CardContent>

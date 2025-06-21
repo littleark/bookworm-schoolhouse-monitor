@@ -76,7 +76,7 @@ export function BookDetail({
                 {studentBook.status.replace("-", " ")}
               </Badge>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Progress</span>
                   <span className="font-bold text-lg">
@@ -88,13 +88,13 @@ export function BookDetail({
                   className="h-3 [&>div]:bg-[#E85C33]"
                   style={{ backgroundColor: "white" }}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="w-8 h-8 mx-auto mb-2 text-blue-500" />
@@ -109,7 +109,17 @@ export function BookDetail({
           <CardContent className="p-4 text-center">
             <Book className="w-8 h-8 mx-auto mb-2 text-green-500" />
             <p className="text-2xl font-bold">{totalPagesRead}</p>
-            <p className="text-sm text-muted-foreground">Pages Read</p>
+            <p className="text-sm text-muted-foreground">Question answered</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Book className="w-8 h-8 mx-auto mb-2 text-green-500" />
+            <p className="text-2xl font-bold">
+              {Math.round(totalPagesRead * Math.random())}%
+            </p>
+            <p className="text-sm text-muted-foreground">Correct spellings</p>
           </CardContent>
         </Card>
 

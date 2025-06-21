@@ -86,7 +86,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
       if (!currentlyReading) {
         // Show some activity in the past for students not currently reading
         const shouldShowActivity = days === 7 ? i >= days - 2 : i >= days - 25; // Last 2 days for 7d, last 25 days for 30d
-        const progress = shouldShowActivity ? Math.random() * 15 + 5 : 0; // 5-20 pages when there was activity
+        const progress = shouldShowActivity ? Math.random() * 10 + 0 : 0; // 5-20 pages when there was activity
 
         dataPoints.push({
           day: dayName,
@@ -118,7 +118,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
 
   const chartConfig = {
     pages: {
-      label: "Pages Read",
+      label: "Minutes",
       color: "#9ca3af", // Gray for old books
     },
     currentPages: {
@@ -172,7 +172,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         <div className="min-h-[80px]">
           {currentlyReading ? (
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              {/* <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium truncate text-gray-900">
                   {currentlyReading.book.title}
                 </span>
@@ -183,7 +183,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
               <Progress
                 value={currentlyReading.progress}
                 className="h-2 bg-gray-200"
-              />
+              /> */}
               {currentlyReading.lastReadDate && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
                   <Calendar className="w-3 h-3" />
@@ -205,7 +205,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
                   No books currently being read
                 </span>
               </div>
-              <div className="h-2 bg-gray-200 rounded-full mb-2"></div>
+              {/* <div className="h-2 bg-gray-200 rounded-full mb-2"></div> */}
               {lastReadDate && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
                   <Calendar className="w-3 h-3" />
@@ -225,9 +225,7 @@ export function StudentCard({ student, onClick }: StudentCardProps) {
         {/* Daily Reading Progress Chart */}
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
-            <p className="text-sm font-medium text-gray-900">
-              Reading Activity
-            </p>
+            <p className="text-sm font-medium text-gray-900">Talking time</p>
             <div className="flex gap-1">
               <button
                 onClick={(e) => {
