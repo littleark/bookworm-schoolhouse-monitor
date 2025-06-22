@@ -350,7 +350,7 @@ export function StudentDetail({
         </CardContent>
       </Card> */}
 
-      <Card id="anwersActivity" className="bg-white shadow-sm">
+      {/* <Card id="anwersActivity" className="bg-white shadow-sm">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle className="flex items-center gap-2 text-gray-900">
@@ -442,7 +442,7 @@ export function StudentDetail({
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Card id="spellingActivity" className="bg-white shadow-sm">
         <CardHeader>
