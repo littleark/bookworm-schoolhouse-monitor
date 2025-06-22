@@ -263,7 +263,7 @@ export function StudentDetail({
       </Card>
 
       {/* Reading Activity Chart */}
-      <Card className="bg-white shadow-sm">
+      {/* <Card className="bg-white shadow-sm">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle className="flex items-center gap-2 text-gray-900">
@@ -348,7 +348,7 @@ export function StudentDetail({
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Card id="anwersActivity" className="bg-white shadow-sm">
         <CardHeader>
